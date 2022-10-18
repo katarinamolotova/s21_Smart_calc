@@ -2,8 +2,6 @@
 
 using namespace s21;
 
-//  парсер строки в очередь
-
 void Model::preparing_for_parcer(string& str, string value) {
     check_str(str);
     replace_x(str, value);
@@ -45,6 +43,8 @@ void Model::parser(string str) {
             numbers_processing(i, str_by_pos, is_unary);
         } else if (str[i] == '-' && is_unary) {
             operations.push("~");
+        } else if (str[i] == '+' && is_unary) {
+            operations.push("plus");
         } else {
             operations_processing(operations, i, str_by_pos, is_unary);
         }
@@ -126,7 +126,7 @@ void Model::prioritization(stack<string>& operations, string op) {
 
 int Model::priority(string op) {
     int result = -1;
-    if (op == "+" || op == "-" || op == "~") {
+    if (op == "+" || op == "-" || op == "~" || op == "plus") {
         result = 1;
     } else if (op == "*" || op == "/" || op == "mod") {
         result = 2;
@@ -163,8 +163,6 @@ int Model::shift_number(string value) {
     }
     return result;
 }
-
-//  Вычисления по уже готовой обратной польской нотации
 
 void Model::calculate() {
     stack<double> intermediate_result;
@@ -211,6 +209,8 @@ void Model::perfoming_unary_operation(stack<double>& intermediate_result,
     double value = get_value_from_stack(intermediate_result);
     if (operation == "~") {
         result = -1 * value;
+    } else if (operation == "plus") {
+        result = value;
     } else if (operation == "sin") {
         result = sin(value);
     } else if (operation == "cos") {
@@ -235,6 +235,8 @@ void Model::perfoming_unary_operation(stack<double>& intermediate_result,
 }
 
 double Model::get_value_from_stack(stack<double>& intermediate_result) {
+    if (intermediate_result.empty())
+        throw std::invalid_argument("Not enought arguments");
     double value =  intermediate_result.top();
     intermediate_result.pop();
     return value;
@@ -246,7 +248,7 @@ bool Model::is_binary_operation(string op) {
 
 bool Model::is_unary_operation(string op) {
     return (op == "sin" || op == "cos" || op == "tan" || op == "sqrt" || op == "ln" ||
-            op == "log" || op == "atan" || op == "acos" || op == "asin" || op == "~");
+            op == "log" || op == "atan" || op == "acos" || op == "asin" || op == "~" || op == "plus");
 }
 
 void Model::check_division(double value) {
@@ -256,7 +258,7 @@ void Model::check_division(double value) {
 
 void Model::check_sqrt(double value) {
     if (value < 0)
-        throw std::invalid_argument("Error: Sqrt of a negatove number");
+        throw std::invalid_argument("Error: Sqrt of a negative number");
 }
 
 void Model::check_str(string str) {
