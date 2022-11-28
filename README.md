@@ -1,4 +1,4 @@
-# s21_Smart_calc
+# smart_calc
 
 Teaching team project. Implemented in a team of two people.
 Team: [teammate: Katarina Molotova](https://github.com/katarinamolotova).
