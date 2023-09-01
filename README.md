@@ -1,4 +1,4 @@
-# smart_calc
+# Smart_calc
 
 Teaching team project. Implemented in a team of two people.
 Team: [teammate: Mikhail Kukhtachev](https://github.com/Kuhtaaa).
